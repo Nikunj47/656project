@@ -13,26 +13,24 @@ def importBasicInfo(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO basic_info (id, name, description, listing_url, neighborhood_overview, picture_url, license, instant_bookable) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                sql = "INSERT INTO basic_info (house_id, name, description, instant_bookable, price, availability, room_type, bathrooms, bedrooms, beds, amenities, numbers_of_reviews, review_score, host_id, neighborhood_id, property) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
                 if (len(val[0]) < 1):
                     continue
-                if len(val[0]) > 19:
-                    val = (row[0][:19], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-                if len(val[1]) > 50:
-                    val = (row[0], row[1][:50], row[2], row[3], row[4], row[5], row[6], row[7])
+                if len(val[1]) > 199:
+                    val = (row[0], row[1][:199], row[2], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
                 if len(val[2]) > 199:
-                    val = (row[0], row[1], row[2][:199], row[3], row[4], row[5], row[6], row[7])
-                if len(val[3]) > 199:
-                    val = (row[0], row[1], row[2], row[3][:199], row[4], row[5], row[6], row[7])
-                if len(val[4]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4][:199], row[5], row[6], row[7])
-                if len(val[5]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5][:199], row[6], row[7])
-                if len(val[6]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6][:44], row[7])
-                if len(val[7]) > 4:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7][:4])
+                    val = (row[0], row[1], row[2][:199], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+                if len(val[3]) > 4:
+                    val = (row[0], row[1], row[2], row[3][:4], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+                if len(val[6]) > 19:
+                    val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6][:19], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+                if len(val[7]) > 19:
+                    val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6], row[7][:19], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+                if len(val[10]) > 199:
+                    val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10][:199], row[11], row[12], row[13], row[14], row[15])
+                if len(val[15]) > 44:
+                    val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10][:199], row[11], row[12], row[13], row[14], row[15][:44])
                 try:
                     mycursor.execute(sql, val)
                     mydb.commit()
@@ -95,48 +93,24 @@ def importHost(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO host (id, host_id, url, name, since, location, about, response_time, response_rate, acceptance_rate, is_superhost, thumbnail_url, picture_url, neighborhood, listing_count, total_listing_count, verifications, has_profile_pic, identity_verified) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
+                sql = "INSERT INTO host (host_id, name, since, about, response_time, response_rate, acceptance_rate, identity_verified) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                 if (len(val[0]) < 1):
                     continue
-                if len(val[0]) > 19:
-                    val = (row[0][:19], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[1]) > 199:
-                    val = (row[0], row[1][:199], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[2]) > 44:
-                    val = (row[0], row[1], row[2][:44], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[3]) > 19:
-                    val = (row[0], row[1], row[2], row[3][:19], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
+                if len(val[1]) > 44:
+                    val = (row[0], row[1][:44], row[2], row[3], row[4], row[5], row[6], row[7])
+                if len(val[2]) > 20:
+                    val = (row[0], row[1], row[2][:20], row[3], row[4], row[5], row[6], row[7])
+                if len(val[3]) > 199:
+                    val = (row[0], row[1], row[2], row[3][:199], row[4], row[5], row[6], row[7])
                 if len(val[4]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4][:44], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[5]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5][:199], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
+                    val = (row[0], row[1], row[2], row[3], row[4][:44], row[5], row[6], row[7])
+                if len(val[5]) > 44:
+                    val = (row[0], row[1], row[2], row[3], row[4], row[5][:44], row[6], row[7])
                 if len(val[6]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6][:44], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[7]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7][:44], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[8]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8][:44], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[9]) > 4:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9][:4], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[10]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10][:199], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[11]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11][:199], row[12], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[12]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12][:44], row[13], row[14], row[15], row[16], row[17], row[18])
-                if len(val[13]) > 19:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13][:19], row[14], row[15], row[16], row[17], row[18])
-                if len(val[14]) > 19:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14][:19], row[15], row[16], row[17], row[18])
-                if len(val[15]) > 45:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15][:44], row[16], row[17], row[18])
-                if len(val[16]) > 4:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16][:4], row[17], row[18])
-                if len(val[17]) > 4:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17][:4], row[18])
-                if len(val[18]) > 19:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18][:19])
+                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6][:44], row[7])
+                if len(val[7]) > 4:
+                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7][:4])
 
                 try:
                     mycursor.execute(sql, val)
@@ -153,7 +127,7 @@ def importHost(mydb):
 
 def importNeighborhood(mydb):
     # Import basic_info table
-    with open('data/neighborhood.csv', 'r', encoding='utf-8') as csvfile:
+    with open('data/new_neighborhood.csv', 'r', encoding='utf-8') as csvfile:
         csv_data = csv.reader(csvfile)
         next(csv_data)  # Skip header row
 
@@ -163,24 +137,14 @@ def importNeighborhood(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO neighborhood (id, detail, cleansed, group_cleansed, latitude, longitude, property_type) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                sql = "INSERT INTO neighborhood (neighborhood_id, name, city, latitude, longitude) VALUES (NULL, %s, %s, %s, %s)"
+                val = (row[0], row[1], row[2], row[3])
                 if (len(val[0]) < 1):
                     continue
-                if len(val[0]) > 19:
-                    val = (row[0][:19], row[1], row[2], row[3], row[4], row[5], row[6])
+                if len(val[0]) > 44:
+                    val = (row[0][:44], row[1], row[2], row[3])
                 if len(val[1]) > 44:
-                    val = (row[0], row[1][:44], row[2], row[3], row[4], row[5], row[6])
-                if len(val[2]) > 44:
-                    val = (row[0], row[1], row[2][:44], row[3], row[4], row[5], row[6])
-                if len(val[3]) > 44:
-                    val = (row[0], row[1], row[2], row[3][:44], row[4], row[5], row[6])
-                if len(val[4]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4][:44], row[5], row[6])
-                if len(val[5]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5][:44], row[6])
-                if len(val[6]) > 44:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5], row[6][:44])
+                    val = (row[0], row[1][:44], row[2], row[3])
                 try:
                     mycursor.execute(sql, val)
                     mydb.commit()
@@ -441,28 +405,18 @@ def importCalendar(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO calendar (id, listing_id, date, avaliable, price, adjusted_price, minimum_nights, maximum_nights) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO calendar (calendar_id, house_id, date, avaliable, price, adjusted_price, minimum_nights, maximum_nights) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)"
                 val = (row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                 if (len(val[0]) < 1):
                     continue
-                if len(val[0]) > 44:
-                    val = (row[1][:44], row[2], row[3], row[4], row[5], row[6], row[7])
-                if len(val[1]) > 44:
-                    val = (row[1], row[2][:44], row[3], row[4], row[5], row[6], row[7])
-                if len(val[2]) > 44:
-                    val = (row[1], row[2], row[3][:44], row[4], row[5], row[6], row[7])
-                if len(val[3]) > 44:
-                    val = (row[1], row[2], row[3], row[4][:44], row[5], row[6], row[7])
-                if len(val[4]) > 44:
-                    val = (row[1], row[2], row[3], row[4], row[5][:44], row[6], row[7])
-                if len(val[5]) > 44:
-                    val = (row[1], row[2], row[3], row[4], row[5], row[6][:44], row[7])
-                if len(val[6]) > 44:
-                    val = (row[1], row[2], row[3], row[4], row[5], row[6], row[7][:44])
+                if len(val[3]) > 4:
+                    val = (row[1], row[2], row[3][:4], row[4], row[5], row[6], row[7])
+                val = (row[1], row[2], row[3], row[4][1:], row[5][1:], row[6], row[7])
                 try:
                     mycursor.execute(sql, val)
                     mydb.commit()
-                    print("Row" + str(ptr) + " has been imported successfully!")
+                    if(ptr % 100 == 0):
+                        print("Row" + str(ptr) + " has been imported successfully!")
                 except Exception as e:
                     print("Line" + str(ptr) + ' Error:', e)
                     mydb.rollback()
@@ -484,22 +438,10 @@ def importReviews(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO reviews (id, listing_id, date, reviewer_id, reviewer_name, comments) VALUES (%s, %s, %s, %s, %s, %s)"
-                val = (row[0], row[1], row[2], row[3], row[4], row[5])
+                sql = "INSERT INTO reviews (review_id, house_id, date, reviewer_name, comments) VALUES (%s, %s, %s, %s, %s)"
+                val = (row[0], row[1], row[2], row[3], row[4])
                 if (len(val[0]) < 1):
                     continue
-                if len(val[0]) > 19:
-                    val = (row[0][:19], row[1], row[2], row[3], row[4], row[5])
-                if len(val[1]) > 19:
-                    val = (row[0], row[1][:19], row[2], row[3], row[4], row[5])
-                if len(val[2]) > 19:
-                    val = (row[0], row[1], row[2][:19], row[3], row[4], row[5])
-                if len(val[3]) > 19:
-                    val = (row[0], row[1], row[2], row[3][:19], row[4], row[5])
-                if len(val[4]) > 19:
-                    val = (row[0], row[1], row[2], row[3], row[4][:19], row[5])
-                if len(val[5]) > 199:
-                    val = (row[0], row[1], row[2], row[3], row[4], row[5][:199])
                 try:
                     mycursor.execute(sql, val)
                     mydb.commit()
@@ -513,6 +455,77 @@ def importReviews(mydb):
                 print("Row" + str(ptr) + " is skipped!")
                 ptr += 1
     mycursor.close()
+
+def importHosting(mydb):
+    # Import basic_info table
+    with open('data/host.csv', 'r', encoding='utf-8') as csvfile:
+        csv_data = csv.reader(csvfile)
+        next(csv_data)  # Skip header row
+
+        ptr = 2
+
+        for row in csv_data:
+
+            if (ptr > 0):  # Use this pointer to skip rows imported
+                mycursor = mydb.cursor()
+                sql = "INSERT INTO hosting (id, hostid) VALUES (%s, %s)"
+                val = (row[0], row[18])
+                if (len(val[0]) < 1 or not (val[0][0] >= '0' and val[0][0] <= '9')):
+                    continue
+                if len(val[0]) > 19:
+                    val = (row[0][:19], row[18])
+                if len(val[1]) > 19:
+                    val = (row[0], row[18][:19])
+                try:
+                    mycursor.execute(sql, val)
+                    mydb.commit()
+                    print("Row" + str(ptr) + " has been imported successfully!")
+                except Exception as e:
+                    print("Line" + str(ptr) + ' Error:', e)
+                    mydb.rollback()
+                ptr += 1
+            else:
+                print("Row" + str(ptr) + " is skipped!")
+                ptr += 1
+    mycursor.close()
+
+def setNeighborhoodId(mydb):
+    table = {'nothing': -1}
+    with open('data/new_neighborhood.csv', 'r', encoding='utf-8') as csvfile:
+        csv_data = csv.reader(csvfile)
+        next(csv_data)
+        for row in csv_data:
+            table[row[1]] = row[0]
+    with open('data/basic_info.csv', 'r', encoding='utf-8') as csvfile:
+        csv_data = csv.reader(csvfile)
+        next(csv_data)  # Skip header row
+
+        ptr = 2
+
+        for row in csv_data:
+            # Insert each row into MySQL database
+            if (ptr > 0):  # Use this pointer to skip rows imported
+                mycursor = mydb.cursor()
+                sql = "INSERT INTO basic_info (house_id, name, description, instant_bookable, price, availability, room_type, bathrooms, bedrooms, beds, amenities, numbers_of_reviews, review_score, host_id, neighborhood_id, property) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                if(not row[14] in table):
+                    continue
+                val = (row[0], row[1], row[2], row[3], row[4][1:], row[5], row[6], row[7], row[8], row[9], row[10], row[11],row[12], row[13], table[row[14]], row[15])
+
+                if (len(val[0]) < 1):
+                    continue
+                try:
+                    mycursor.execute(sql, val)
+                    mydb.commit()
+                    print("Row" + str(ptr) + " has been imported successfully!")
+                except Exception as e:
+                    print("Line" + str(ptr) + ' Error:', e)
+                    mydb.rollback()
+                ptr += 1
+            else:
+                print("Row" + str(ptr) + " is skipped!")
+                ptr += 1
+    mycursor.close()
+
 
 if __name__=="__main__":
 
@@ -537,5 +550,7 @@ if __name__=="__main__":
     #importCalculatedHostListingCount(mydb)
     #importCalendar(mydb)
     importReviews(mydb)
+    #importHosting(mydb)
+    #setNeighborhoodId()
 
 
