@@ -405,7 +405,7 @@ def importCalendar(mydb):
             # Insert each row into MySQL database
             if (ptr > 0):  # Use this pointer to skip rows imported
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO calendar (calendar_id, house_id, date, avaliable, price, adjusted_price, minimum_nights, maximum_nights) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO calendar (calendar_id, house_id, date, available, price, adjusted_price, minimum_nights, maximum_nights) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)"
                 val = (row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                 if (len(val[0]) < 1):
                     continue
@@ -548,8 +548,8 @@ if __name__=="__main__":
     #importCalendarListing(mydb)
     #importReviewListing(mydb)
     #importCalculatedHostListingCount(mydb)
-    #importCalendar(mydb)
-    importReviews(mydb)
+    importCalendar(mydb)
+    #importReviews(mydb)
     #importHosting(mydb)
     #setNeighborhoodId()
 
