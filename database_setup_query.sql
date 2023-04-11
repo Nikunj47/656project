@@ -1,7 +1,33 @@
-CREATE DATABASE `656project` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `656project` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE 656project;
 
+DROP TABLE IF EXISTS `neighborhood`;
+CREATE TABLE `neighborhood` (
+  `neighborhood_id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  PRIMARY KEY (`neighborhood_id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=418 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `host`;
+CREATE TABLE `host` (
+  `host_id` bigint NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `since` date DEFAULT NULL,
+  `about` text,
+  `response_time` varchar(45) DEFAULT NULL,
+  `response_rate` varchar(45) DEFAULT NULL,
+  `acceptance_rate` varchar(45) DEFAULT NULL,
+  `identity_verified` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`host_id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `basic_info`;
 CREATE TABLE `basic_info` (
   `house_id` bigint NOT NULL,
   `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
@@ -26,6 +52,20 @@ CREATE TABLE `basic_info` (
   CONSTRAINT `neighborhood_id` FOREIGN KEY (`neighborhood_id`) REFERENCES `neighborhood` (`neighborhood_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `reviews`;
+CREATE TABLE `reviews` (
+  `review_id` bigint NOT NULL,
+  `house_id` bigint DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `reviewer_name` varchar(20) DEFAULT NULL,
+  `comments` text,
+  PRIMARY KEY (`review_id`),
+  KEY `house_id_idx` (`house_id`),
+  KEY `date` (`date`),
+  CONSTRAINT `house_id` FOREIGN KEY (`house_id`) REFERENCES `basic_info` (`house_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `calendar`;
 CREATE TABLE `calendar` (
   `calendar_id` int NOT NULL AUTO_INCREMENT,
   `house_id` bigint DEFAULT NULL,
@@ -37,37 +77,6 @@ CREATE TABLE `calendar` (
   `maximum_nights` int DEFAULT NULL,
   PRIMARY KEY (`calendar_id`),
   KEY `house_id_idx` (`house_id`),
+  KEY `date` (`date`),
   CONSTRAINT `_house_id` FOREIGN KEY (`house_id`) REFERENCES `basic_info` (`house_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3014511 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `host` (
-  `host_id` bigint NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `since` date DEFAULT NULL,
-  `about` text,
-  `response_time` varchar(45) DEFAULT NULL,
-  `response_rate` varchar(45) DEFAULT NULL,
-  `acceptance_rate` varchar(45) DEFAULT NULL,
-  `identity_verified` varchar(5) DEFAULT NULL,
-  PRIMARY KEY (`host_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `neighborhood` (
-  `neighborhood_id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  `city` varchar(45) DEFAULT NULL,
-  `latitude` double DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
-  PRIMARY KEY (`neighborhood_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=418 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `reviews` (
-  `review_id` bigint NOT NULL,
-  `house_id` bigint DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `reviewer_name` varchar(20) DEFAULT NULL,
-  `comments` text,
-  PRIMARY KEY (`review_id`),
-  KEY `house_id_idx` (`house_id`),
-  CONSTRAINT `house_id` FOREIGN KEY (`house_id`) REFERENCES `basic_info` (`house_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3016467 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

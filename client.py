@@ -344,6 +344,7 @@ def AddHouse(mycursor):#not test
     try:
         mycursor.execute(sqlquery)
         mydb.commit()
+        print("Add new house successfully!")
     except Exception as e:
         print("Database error: ", e)
         mydb.rollback()
@@ -385,6 +386,7 @@ def ChangeHouse(mycursor, result):
     try:
         mycursor.execute(sqlquery)
         mydb.commit()
+        print("Change house successfully!")
     except Exception as e:
         print("Database error: ", e)
         mydb.rollback()
@@ -434,6 +436,7 @@ def AddHost(mycursor):  # not test
     try:
         mycursor.execute(sqlquery)
         mydb.commit()
+        print("Sign up successfully!")
     except Exception as e:
         print("Database error: ", e)
         mydb.rollback()
@@ -450,6 +453,7 @@ def AddReview(mycursor):  # not test
     try:
         mycursor.execute(sqlquery)
         mydb.commit()
+        print("Post review successfully!")
     except Exception as e:
         print("Database error: ", e)
         mydb.rollback()
@@ -466,7 +470,6 @@ def AddReview(mycursor):  # not test
         return
 
 if __name__=="__main__":
-
 
     # Connect to MySQL
     mydb = mysql.connector.connect(
