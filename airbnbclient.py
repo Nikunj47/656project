@@ -2,64 +2,10 @@ import mysql.connector
 import datetime
 
 def MainPage(mydb):
-    print("--------------------------------")
-    print("Welcome to house renting system!")
-    print("Input 1 to sign in")
-    print("Input 2 to sign up")
-    re = input()
-
-    if(re == 1):
-        Login(mydb)
-    elif(re == 2):
-        Signup(mydb)
-
-    print("Bye~")
-
-def Login(mydb):
-    mycursor = mydb.cursor(buffered=True)
-    userId = input("Please input your user id: ")
-    sqlquery = "select name from basic_info where user_id = \"" + str(id) + "\";"
-
-    try:
-        mycursor.execute(sqlquery)
-        mydb.commit()
-        result = mycursor.fetchall()
-    except Exception as e:
-        print("Database error: ", e)
-        mydb.rollback()
-
-    mycursor.close()
-
-    InnerPage(mydb, userId)
-
-
-def Signup(mydb):
-    mycursor = mydb.cursor(buffered=True)
-    name = input("Please input your name: ")
-    about = input("Please input description about you: ")
-    sqlquery = "INSERT INTO user (user_id, name, about, is_host) VALUES (NULL, \"" + name + "\", \"" + about + "\", \"f\")"
-
-    try:
-        mycursor.execute(sqlquery)
-
-        mycursor.execute("SELECT LAST_INSERT_ID()")
-        result = mycursor.fetchone()
-        userId = result[0]
-
-        mydb.commit()
-    except Exception as e:
-        print("Database error: ", e)
-        mydb.rollback()
-
-    mycursor.close()
-
-    InnerPage(mydb, userId)
-
-
-def InnerPage(mydb, userId):
-    while(True):
+    while (True):
         print("--------------------------------")
-        print("Press 1 to check house list.")
+        print("Welcome to house renting system!")
+        print("Press 1 to move to housing market.")
         print("Press 2 to check neighborhood list.")
         print("Press 3 to check host list.")
         print("Press 4 to check review.")
@@ -72,7 +18,7 @@ def InnerPage(mydb, userId):
         selected = input()
         if (selected == "1"):
             print("--------------------------------")
-            HouseList(mydb, userId)
+            HouseList(mydb)
         elif (selected == "2"):
             print("--------------------------------")
             NeighborhoodList(mydb)
@@ -91,198 +37,159 @@ def InnerPage(mydb, userId):
         elif (selected == "0"):
             break
 
+    print("Bye~")
+
+
 def HouseList(mydb, userId):
     mycursor = mydb.cursor(buffered=True)
-    print("Welcome to Check House List!")
-    print("Input 1 to check housing market")
-    print("Input 2 to delete a house")
-    print("input 0 to exit")
+    print("Welcome to housing market")
     listing = input()
-    if(listing == "1"):
 
-        id = input("Input id of house. You can input null to skip this filter.")
-        name = input("Input key words in name to search. You can input null to skip this filter.")
-        bookable = input("Is the house instant bookable? t for true and f for false, null to skip this filter.")
-        bedrooms = input("Input how many bedrooms you want. You can input null to skip this filter")
-        print("Which kind of room type do you want?")
-        print("Press 1 to choose Entire Home / Apt")
-        print("Press 2 to choose Private Room")
-        print("Press 3 to choose Shared Room")
-        print("Press 4 to choose Hotel Room")
-        print("You can input null to skip this filter.")
-        room_type = input()
+    id = input("Input id of house. You can input null to skip this filter.")
+    name = input("Input key words in name to search. You can input null to skip this filter.")
+    neighborhood = input("Input key words in neighborhood to search. You can input null to skip this filter.")
+    bookable = input("Is the house instant bookable? t for true and f for false, null to skip this filter.")
+    bathrooms = input("Input how many bathrooms you want. You can input null to skip this filter")
+    bedrooms = input("Input how many bedrooms you want. You can input null to skip this filter")
+    print("You can input null to skip this filter.")
+    room_type = input()
 
-        sqlquery = "select * from basic_info where 1=1"
+    sqlquery = "select * from listing where 1=1"
 
-        if(id != "null"):
-            sqlquery = sqlquery + " and house_id = \"" + id + "\""
-        if(name != "null"):
-            sqlquery = sqlquery + " and name like \"%" + name + "%\""
-        if (bookable != "null"):
-            sqlquery = sqlquery + " and instant_bookable = \"" + bookable + "\""
-        if (bedrooms != "null"):
-            sqlquery = sqlquery + " and bedrooms >= " + bedrooms
-        if (room_type != "null"):
-            if(room_type == "1"):
-                sqlquery = sqlquery + " and room_type = \"Entire home / apt\""
-            if(room_type == "2"):
-                sqlquery = sqlquery + " and room_type = \"Private room\""
-            if(room_type == "3"):
-                sqlquery = sqlquery + " and room_type = \"Shared room\""
-            if(room_type == "4"):
-                sqlquery = sqlquery + " and room_type = \"Hotel room\""
-        sqlquery = sqlquery + " limit 10;"
+    if(id != "null"):
+        sqlquery = sqlquery + " and listingid = \"" + id + "\""
+    if(name != "null"):
+        sqlquery = sqlquery + " and listingname like \"%" + name + "%\""
+    if(neighborhood != "null"):
+        sqlquery = sqlquery + " and neighborhood like \"%" + neighborhood + "%\""
+    if (bookable != "null"):
+        sqlquery = sqlquery + " and instant_bookable = \"" + bookable + "\""
+    if (bedrooms != "null"):
+        sqlquery = sqlquery + " and bedrooms >= " + bedrooms
+    if (bathrooms != "null"):
+        sqlquery = sqlquery + " and bathrooms >= " + bathrooms
+    sqlquery = sqlquery + " limit 10;"
+    try:
+        mycursor.execute(sqlquery)
+        mydb.commit()
+        result = mycursor.fetchall()
+        i = 1
+        for x in result:
+            print("")
+            print("Result #" + str(i))
+            print("-Id: " + str(x[0]))
+            print("-Name: " + x[1])
+            print("-Street: " + x[2])
+            print("-Neighborhood: " + x[3])
+            print("-City: " + x[4])
+            print("-State: " + x[5])
+            i = i + 1
+    except Exception as e:
+        print("Database error: ", e)
+        mydb.rollback()
+
+    index = input("Input the index of house you what to know more: ")
+    if(index >= 0 and index < len(result)):
+        houseId = result[index][0]
+        sqlquery = "select * from listing inner join bedtype on listing.bedtypeid = bedtype.bedtypeid "
+        sqlquery = sqlquery + "inner join roomtype on listing.roomtypeid = roomtype.roomtypeid inner join propertytype on listing.propertytypeid = propertytype.propertytypeid "
+        sqlquery = sqlquery + "inner join listing_has_amenities on listing.listingid = listing_has_amenities.listingid "
+        sqlquery = sqlquery + "inner join amenities on listing_has_amenities.AmenityID = amenities.AmenityID "
+        sqlquery = sqlquery + "where listing.listingid = \"" + str(houseId) + "\";"
+
         try:
             mycursor.execute(sqlquery)
             mydb.commit()
             result = mycursor.fetchall()
-            i = 1
+            print("")
+            print("House Information: ")
+            print("-Id: " + str(result[0][0]))
+            print("-name: " + str(result[0][1]))
+            print("-description: " + str(result[0][2]))
+            print("-Instant Bookable: " + str(result[0][3]))
+            print("-Price: " + str(result[0][4]))
+            print("-Availability: " + str(result[0][5]))
+            print("-Room Type: " + str(result[0][6]))
+            print("-Bathrooms: " + str(result[0][7]))
+            print("-Bedrooms: " + str(result[0][8]))
+            print("-Beds: " + str(result[0][9]))
+            print("-Numbers of Reviews: " + str(result[0][10]))
+            print("-Review Score: " + str(result[0][11]))
+            print("-Property: " + str(result[0][14]))
+            print("-Amenities:", end = " ")
             for x in result:
-                print("")
-                print("Result #" + str(i))
-                print("-Id: " + str(x[0]))
-                print("-Name: " + x[1])
-                print("-Price: $" + str(x[4]))
-                print("-Description: " + x[2])
-                i = i + 1
+                print(x[30], end = " ")
+            print("")
+
+            print("")
+            print("Neighborhood Information: ")
+            print("-Id: " + str(result[0][15]))
+            print("-Name: " + str(result[0][16]))
+            print("-City: " + str(result[0][17]))
+
+            print("")
+            print("Host Information: ")
+            print("-Id: " + str(result[0][20]))
+            print("-Name: " + str(result[0][26]))
+            print("-Since: " + str(result[0][21]))
+            print("-Description: " + str(result[0][27]))
+            print("-Response Time: " + str(result[0][22]))
+            print("-Response Rate: " + str(result[0][23]))
+            print("-Acceptance Rate: " + str(result[0][24]))
         except Exception as e:
             print("Database error: ", e)
             mydb.rollback()
 
-        index = input("Input the index of house you what to know more: ")
-        if(index >= 0 and index < len(result)):
-            houseId = result[index][0]
-            sqlquery = "select * from basic_info inner join neighborhood on basic_info.neighborhood_id = neighborhood.neighborhood_id "
-            sqlquery = sqlquery + "inner join host on basic_info.host_id = host.host_id inner join amenities on basic_info.house_id = amenities.house_id "
-            sqlquery = sqlquery + "where basic_info.house_id = \"" + str(houseId) + "\";"
+        while(True):
+            print("")
+            print("-------------------------------")
+            print("Input 1 to show price history.")
+            print("Input 2 to show detailed reviews.")
+            print("Input 3 to order this house")
+            print("Input 0 to leave this page.")
+            res = input()
 
-            try:
-                mycursor.execute(sqlquery)
-                mydb.commit()
-                result = mycursor.fetchall()
-                print("")
-                print("House Information: ")
-                print("-Id: " + str(result[0][0]))
-                print("-name: " + str(result[0][1]))
-                print("-description: " + str(result[0][2]))
-                print("-Instant Bookable: " + str(result[0][3]))
-                print("-Price: " + str(result[0][4]))
-                print("-Availability: " + str(result[0][5]))
-                print("-Room Type: " + str(result[0][6]))
-                print("-Bathrooms: " + str(result[0][7]))
-                print("-Bedrooms: " + str(result[0][8]))
-                print("-Beds: " + str(result[0][9]))
-                print("-Numbers of Reviews: " + str(result[0][10]))
-                print("-Review Score: " + str(result[0][11]))
-                print("-Property: " + str(result[0][14]))
-                print("-Amenities:", end = " ")
-                for x in result:
-                    print(x[30], end = " ")
-                print("")
-
-                print("")
-                print("Neighborhood Information: ")
-                print("-Id: " + str(result[0][15]))
-                print("-Name: " + str(result[0][16]))
-                print("-City: " + str(result[0][17]))
-
-                print("")
-                print("Host Information: ")
-                print("-Id: " + str(result[0][20]))
-                print("-Name: " + str(result[0][26]))
-                print("-Since: " + str(result[0][21]))
-                print("-Description: " + str(result[0][27]))
-                print("-Response Time: " + str(result[0][22]))
-                print("-Response Rate: " + str(result[0][23]))
-                print("-Acceptance Rate: " + str(result[0][24]))
-            except Exception as e:
-                print("Database error: ", e)
-                mydb.rollback()
-
-            while(True):
-                print("")
-                print("-------------------------------")
-                print("Input 1 to show price history.")
-                print("Input 2 to show detailed reviews.")
-                print("Input 3 to order this house")
-                print("Input 0 to leave this page.")
-                res = input()
-
-                if(res == 1):
-                    sqlquery = "select DATE_FORMAT(date, '%Y-%m'), price from calendar where house_id = \"" + houseId + "\" group by DATE_FORMAT(date, '%Y-%m');"
-                    try:
-                        mycursor.execute(sqlquery)
-                        mydb.commit()
-                        result = mycursor.fetchall()
-                        if (len(result) == 0):
-                            print("No results returned!")
-                        print("")
-                        print("Price History: ")
-                        for x in result:
-                            print("In " + str(x[0]) + " the price of this house is " + str(x[1]))
-                    except Exception as e:
-                        print("Database error: ", e)
-                        mydb.rollback()
-                if(res == 2):
-                    sqlquery = "select * from reviews where 1=1 and house_id = \"" + houseId + "\" limit 10;"
-                    try:
-                        mycursor.execute(sqlquery)
-                        mydb.commit()
-                        result = mycursor.fetchall()
-                        i = 1
-                        if (len(result) == 0):
-                            print("No results returned!")
-                        for x in result:
-                            print("")
-                            print("Result #" + str(i))
-                            print("-Date: " + str(x[2]))
-                            print("-Reviewer Name: " + x[3])
-                            print("-Comments: " + x[4])
-                            i = i + 1
-                    except Exception as e:
-                        print("Database error: ", e)
-                        mydb.rollback()
-                if(res == 3):
-                    sqlquery = "INSERT INTO house_renting (user_id, house_id) VALUES (\"" + userId + "\", \"" + houseId + "\");"
-                    try:
-                        mycursor.execute(sqlquery)
-                        mydb.commit()
-                        print("Ordered Successfully!")
-                        break
-                    except Exception as e:
-                        print("Database error: ", e)
-                        mydb.rollback()
-
-    elif(listing == "2"):
-        sqlquery = "select house_id, name, price from house_renting where user_id = \"" + str(userId) + "\";"
-        try:
-            mycursor.execute(sqlquery)
-            mydb.commit()
-            result = mycursor.fetchall()
-            if (len(result) < 1):
-                print("You are not renting any house yet")
-            else:
-                print("Your renting house is listing below. ")
-                for x in result:
-                    print("")
-                    print("Result #" + str(i))
-                    print("-Id: " + str(x[0]))
-                    print("-Name: " + x[1])
-                    print("-Price: $" + str(x[2]))
-                    i = i + 1
-        except Exception as e:
-            print("Database error: ", e)
-            mydb.rollback()
-
-        if(len(result) > 0):
-            index = input("Input the index of house you want to delete: ")
-            if (index >= 0 and index < len(result)):
-                houseId = result[index][0]
-                sqlquery = "DELETE FROM house_renting WHERE house_id = \"" + houseId + "\" and user_id = \"" + userId + "\";"
+            if(res == 1):
+                sqlquery = "select DATE_FORMAT(date, '%Y-%m'), price from calendar where house_id = \"" + houseId + "\" group by DATE_FORMAT(date, '%Y-%m');"
                 try:
                     mycursor.execute(sqlquery)
                     mydb.commit()
-                    print("Deleted House Successfully!")
+                    result = mycursor.fetchall()
+                    if (len(result) == 0):
+                        print("No results returned!")
+                    print("")
+                    print("Price History: ")
+                    for x in result:
+                        print("In " + str(x[0]) + " the price of this house is " + str(x[1]))
+                except Exception as e:
+                    print("Database error: ", e)
+                    mydb.rollback()
+            if(res == 2):
+                sqlquery = "select * from reviews where 1=1 and house_id = \"" + houseId + "\" limit 10;"
+                try:
+                    mycursor.execute(sqlquery)
+                    mydb.commit()
+                    result = mycursor.fetchall()
+                    i = 1
+                    if (len(result) == 0):
+                        print("No results returned!")
+                    for x in result:
+                        print("")
+                        print("Result #" + str(i))
+                        print("-Date: " + str(x[2]))
+                        print("-Reviewer Name: " + x[3])
+                        print("-Comments: " + x[4])
+                        i = i + 1
+                except Exception as e:
+                    print("Database error: ", e)
+                    mydb.rollback()
+            if(res == 3):
+                sqlquery = "INSERT INTO house_renting (user_id, house_id) VALUES (\"" + userId + "\", \"" + houseId + "\");"
+                try:
+                    mycursor.execute(sqlquery)
+                    mydb.commit()
+                    print("Ordered Successfully!")
+                    break
                 except Exception as e:
                     print("Database error: ", e)
                     mydb.rollback()
