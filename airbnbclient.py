@@ -132,7 +132,9 @@ def HouseList(mydb):
             print("Input 0 to leave this page.")
             r = input()
 
-            if(r == "1"):
+            if(r == "0"):
+                return
+            elif(r == "1"):
                 sqlquery = "select date, price from booking where listingid = \"" + str(houseId) + "\" and price != \"\" order by date desc;"
                 try:
                     mycursor.execute(sqlquery)
@@ -220,6 +222,9 @@ def HostPanel(mydb):
             mydb.commit()
             result = mycursor.fetchall()
             i = 1
+            if(len(result) == 0):
+                print("You don't have house!")
+                return
             print("Here is your house list: ")
             for x in result:
                 print("")
