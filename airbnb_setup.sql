@@ -2,18 +2,21 @@ CREATE DATABASE IF NOT EXISTS `airbnb` /*!40100 DEFAULT CHARACTER SET utf8mb4 CO
 
 USE airbnb;
 
+DROP TABLE IF EXISTS `amenities`;
 CREATE TABLE `amenities` (
   `AmenityID` varchar(10) NOT NULL,
   `AmenityDescription` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`AmenityID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `bedtype`;
 CREATE TABLE `bedtype` (
   `BedTypeID` varchar(10) NOT NULL,
   `BedType` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`BedTypeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `booking`;
 CREATE TABLE `booking` (
   `ListingID` int NOT NULL,
   `date` date DEFAULT NULL,
@@ -23,6 +26,7 @@ CREATE TABLE `booking` (
   CONSTRAINT `fk_Booking_Listing1` FOREIGN KEY (`ListingID`) REFERENCES `listing` (`ListingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `host`;
 CREATE TABLE `host` (
   `HostID` int NOT NULL,
   `HostName` varchar(45) DEFAULT NULL,
@@ -34,6 +38,7 @@ CREATE TABLE `host` (
   PRIMARY KEY (`HostID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `host_has_listing`;
 CREATE TABLE `host_has_listing` (
   `ListingID` int NOT NULL,
   `HostID` int NOT NULL,
@@ -47,6 +52,7 @@ CREATE TABLE `host_has_listing` (
   CONSTRAINT `fk_Host_has_Listing_Listing1` FOREIGN KEY (`ListingID`) REFERENCES `listing` (`ListingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `listing`;
 CREATE TABLE `listing` (
   `ListingID` int NOT NULL,
   `ListingName` varchar(50) DEFAULT NULL,
@@ -71,6 +77,7 @@ CREATE TABLE `listing` (
   CONSTRAINT `fk_Listing_Room Type1` FOREIGN KEY (`RoomTypeID`) REFERENCES `roomtype` (`RoomTypeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `listing_has_amenities`;
 CREATE TABLE `listing_has_amenities` (
   `ListingID` int NOT NULL,
   `AmenityID` varchar(10) NOT NULL,
@@ -81,18 +88,21 @@ CREATE TABLE `listing_has_amenities` (
   CONSTRAINT `fk_Listing_has_Amenities_Listing1` FOREIGN KEY (`ListingID`) REFERENCES `listing` (`ListingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `propertytype`;
 CREATE TABLE `propertytype` (
   `PropertyTypeID` varchar(10) NOT NULL,
   `Property_type` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`PropertyTypeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `reviewer`;
 CREATE TABLE `reviewer` (
   `reviewerID` int NOT NULL,
   `ReviewerName` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`reviewerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `reviews`;
 CREATE TABLE `reviews` (
   `ReviewID` int NOT NULL,
   `date` date DEFAULT NULL,
@@ -105,6 +115,7 @@ CREATE TABLE `reviews` (
   CONSTRAINT `fk_Reviews_Reviewer1` FOREIGN KEY (`ReviewerID`) REFERENCES `reviewer` (`reviewerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `roomtype`;
 CREATE TABLE `roomtype` (
   `RoomTypeID` varchar(10) NOT NULL,
   `room_type` varchar(50) DEFAULT NULL,
